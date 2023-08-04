@@ -1,10 +1,14 @@
 package com.example.bookwonders.service;
 
+import com.example.bookwonders.dto.BookResponseDto;
+import com.example.bookwonders.dto.CreateBookRequestDto;
 import com.example.bookwonders.model.Book;
 import java.util.List;
 
 public interface BookService {
-    Book save(Book product);
+    BookResponseDto save(CreateBookRequestDto requestDto);
 
-    List<Book> findAll();
+    public BookResponseDto getBookById(Long id);
+
+    List<BookResponseDto> findAll();
 }
