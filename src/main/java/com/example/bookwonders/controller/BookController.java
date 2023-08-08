@@ -5,7 +5,6 @@ import com.example.bookwonders.dto.BookSearchParametersDto;
 import com.example.bookwonders.dto.CreateBookRequestDto;
 import com.example.bookwonders.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,14 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 @Tag(name = "Books", description = "API for managing books")
 public class BookController {
     private final BookService bookService;
 
     @GetMapping
     @Operation(summary = "Get all books")
-    public List<BookResponseDto> getAllBooks(Pageable pageable) {
+    public List<BookResponseDto> getAllBooks(@ParameterObject Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
