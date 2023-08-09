@@ -1,9 +1,8 @@
 package com.example.bookwonders.service;
 
-import com.example.bookwonders.dto.BookResponseDto;
-import com.example.bookwonders.dto.BookSearchParametersDto;
-import com.example.bookwonders.dto.CreateBookRequestDto;
-import com.example.bookwonders.model.Book;
+import com.example.bookwonders.dto.book.BookResponseDto;
+import com.example.bookwonders.dto.book.BookSearchParametersDto;
+import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
