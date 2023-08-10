@@ -1,8 +1,8 @@
 package com.example.bookwonders.mapper;
 
 import com.example.bookwonders.config.MapperConfig;
-import com.example.bookwonders.dto.BookResponseDto;
-import com.example.bookwonders.dto.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.BookResponseDto;
+import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.model.Book;
 import org.mapstruct.Mapper;
 

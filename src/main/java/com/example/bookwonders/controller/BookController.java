@@ -1,8 +1,8 @@
 package com.example.bookwonders.controller;
 
-import com.example.bookwonders.dto.BookResponseDto;
-import com.example.bookwonders.dto.BookSearchParametersDto;
-import com.example.bookwonders.dto.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.BookResponseDto;
+import com.example.bookwonders.dto.book.BookSearchParametersDto;
+import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,8 +46,9 @@ public class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a new book")
+    @Operation(summary = "Create a new book (Only for admin)")
     @ApiResponse(responseCode = "201", description = "Book created successfully", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
@@ -54,7 +56,8 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update a book by ID")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Operation(summary = "Update a book by ID (Only for admin)")
     @ApiResponse(responseCode = "200", description = "Book updated successfully", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto updateBook(@PathVariable Long id, @RequestBody @Valid CreateBookRequestDto requestDto) {
@@ -68,8 +71,9 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Search books")
+    @Operation(summary = "Delete a book by id (Only for admin)")
     @ApiResponse(responseCode = "204", description = "Book deleted successfully")
     public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);

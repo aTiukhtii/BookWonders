@@ -1,8 +1,8 @@
 package com.example.bookwonders.service;
 
-import com.example.bookwonders.dto.BookResponseDto;
-import com.example.bookwonders.dto.BookSearchParametersDto;
-import com.example.bookwonders.dto.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.BookResponseDto;
+import com.example.bookwonders.dto.book.BookSearchParametersDto;
+import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
