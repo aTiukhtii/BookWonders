@@ -21,6 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private static final Integer PREFIX = 7;
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
