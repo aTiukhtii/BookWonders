@@ -8,6 +8,7 @@ import org.springframework.beans.BeanWrapperImpl;
 public class FieldsValueMatchValidator implements ConstraintValidator<FieldMatch, Object> {
     private String field;
     private String fieldMatch;
+
     @Override
     public void initialize(FieldMatch constraintAnnotation) {
         this.field = constraintAnnotation.field();
