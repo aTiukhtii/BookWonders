@@ -1,5 +1,6 @@
 package com.example.bookwonders.controller;
 
+import com.example.bookwonders.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookwonders.dto.category.CategoryResponseDto;
 import com.example.bookwonders.dto.category.CreateCategoryDto;
 import com.example.bookwonders.service.CategoryService;
@@ -15,6 +16,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +50,7 @@ public class CategoryController {
     }
 
     @PostMapping("/{id}")
-    @Operation(summary = "Get category by ID")
+    @Operation(summary = "Update category by ID (Only for admin)")
     @ApiResponse(responseCode = "200", description = "Category updated successfully", content = {
             @Content(mediaType = "application/json",
                     schema = @Schema(implementation = CategoryResponseDto.class))})
@@ -58,11 +60,23 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get category by id")
+    public CategoryResponseDto getCategoryById(@PathVariable Long id) {
+        return categoryService.getById(id);
+    }
+
+    @GetMapping("/{id}/books")
+    @Operation(summary = "Get books by category id")
+    public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(@PathVariable Long id) {
+        return categoryService.getBooksByCategoriesId(id);
+    }
+
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a category by id (Only for admin)")
     @ApiResponse(responseCode = "204", description = "Category deleted successfully")
-    public CategoryResponseDto getCategoryById(@PathVariable Long id) {
-        return categoryService.getById(id);
+    public void delete(@PathVariable Long id) {
+        categoryService.deleteById(id);
     }
 }

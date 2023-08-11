@@ -8,6 +8,7 @@ import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
 import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.book.BookSpecificationBuilder;
+import com.example.bookwonders.repository.category.CategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +19,19 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
     private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookResponseDto save(CreateBookRequestDto requestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(requestDto)));
+        Book book = bookMapper.toModel(requestDto);
+        requestDto.getCategoryIds()
+                .stream()
+                .map(categoryRepository::findById)
+                .map(c -> c.orElseThrow(() ->
+                        new EntityNotFoundException("can't find category: " + c)))
+                .forEach(category -> category.addBook(book));
+        return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override

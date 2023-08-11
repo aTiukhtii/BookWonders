@@ -22,10 +22,4 @@ public interface BookMapper {
     default void setCategoryIds(@MappingTarget BookResponseDto bookDto, Book book) {
         bookDto.setCategoryIds(book.getCategories().stream().map(Category::getId).toList());
     }
-
-    //    @Named("bookFromId")
-    //    default Book bookFromId(Long id, BookRepository bookRepository) {
-    //        return bookRepository.findById(id).orElseThrow(() ->
-    //                new EntityNotFoundException("can't find a book by id:" + id));
-    //    }
 }

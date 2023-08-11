@@ -1,5 +1,6 @@
 package com.example.bookwonders.service;
 
+import com.example.bookwonders.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookwonders.dto.category.CategoryResponseDto;
 import com.example.bookwonders.dto.category.CreateCategoryDto;
 import java.util.List;
@@ -15,4 +16,6 @@ public interface CategoryService {
     CategoryResponseDto update(Long id, CreateCategoryDto categoryDto);
 
     void deleteById(Long id);
+
+    List<BookDtoWithoutCategoryIds> getBooksByCategoriesId(Long id);
 }
