@@ -1,7 +1,7 @@
 package com.example.bookwonders.dto.book;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -11,7 +11,7 @@ public class BookResponseDto {
     private String author;
     private String isbn;
     private BigDecimal price;
-    private Set<Long> categoryIds;
+    private List<Long> categoryIds;
     private String description;
     private String coverImage;
 }
