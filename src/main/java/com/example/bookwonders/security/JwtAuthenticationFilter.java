@@ -18,9 +18,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private static final Integer PREFIX = 7;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
-    private static final Integer PREFIX = 7;
 
     @Override
     protected void doFilterInternal(
