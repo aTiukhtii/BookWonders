@@ -1,6 +1,5 @@
 package com.example.bookwonders.security;
 
-import com.example.bookwonders.dto.user.UserLoginResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -34,15 +33,15 @@ public class JwtUtil {
     }
 
     public boolean isValidToken(String token) {
-       try {
+        try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
                     .setSigningKey(secret)
                     .build()
                     .parseClaimsJws(token);
             return !claimsJws.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-           throw new JwtException("Expired or invalid JWT token");
-       }
+            throw new JwtException("Expired or invalid JWT token");
+        }
     }
 
     public String getUsername(String token) {
