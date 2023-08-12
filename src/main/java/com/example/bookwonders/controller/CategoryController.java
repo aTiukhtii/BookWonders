@@ -42,8 +42,9 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new category (Only for admin)")
-    @ApiResponse(responseCode = "201", description = "Category created successfully", content = {
-            @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201",
+            description = "Category created successfully",
+            content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = CategoryResponseDto.class))})
     public CategoryResponseDto createCategory(@RequestBody @Valid CreateCategoryDto categoryDto) {
         return categoryService.save(categoryDto);
@@ -51,8 +52,9 @@ public class CategoryController {
 
     @PostMapping("/{id}")
     @Operation(summary = "Update category by ID (Only for admin)")
-    @ApiResponse(responseCode = "200", description = "Category updated successfully", content = {
-            @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200",
+            description = "Category updated successfully",
+            content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = CategoryResponseDto.class))})
     public CategoryResponseDto updateCategory(@PathVariable Long id,
                                               @RequestBody @Valid CreateCategoryDto categoryDto) {
@@ -75,7 +77,8 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a category by id (Only for admin)")
-    @ApiResponse(responseCode = "204", description = "Category deleted successfully")
+    @ApiResponse(responseCode = "204",
+            description = "Category deleted successfully")
     public void delete(@PathVariable Long id) {
         categoryService.deleteById(id);
     }

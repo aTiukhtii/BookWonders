@@ -49,8 +49,9 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new book (Only for admin)")
-    @ApiResponse(responseCode = "201", description = "Book created successfully", content = {
-            @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "201",
+            description = "Book created successfully",
+            content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
@@ -59,8 +60,9 @@ public class BookController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update a book by ID (Only for admin)")
-    @ApiResponse(responseCode = "200", description = "Book updated successfully", content = {
-            @Content(mediaType = "application/json",
+    @ApiResponse(responseCode = "200",
+            description = "Book updated successfully",
+            content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto updateBook(@PathVariable Long id,
                                       @RequestBody @Valid CreateBookRequestDto requestDto) {
@@ -77,7 +79,8 @@ public class BookController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete a book by id (Only for admin)")
-    @ApiResponse(responseCode = "204", description = "Book deleted successfully")
+    @ApiResponse(responseCode = "204",
+            description = "Book deleted successfully")
     public void deleteBook(@PathVariable Long id) {
         bookService.delete(id);
     }
