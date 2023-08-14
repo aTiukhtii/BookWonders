@@ -17,3 +17,13 @@ databaseChangeLog:
       file: db/changelog/changes/08-create-category-table.yaml
   - include:
       file: db/changelog/changes/09-create-book-category-table.yaml
+  - include:
+      file: db/changelog/changes/10-add-is-deleted-column-to-categories.yaml
+  - include:
+      file: db/changelog/changes/11-create-cart-item-table.yaml
+  - include:
+      file: db/changelog/changes/12-create-shopping-cart-table.yaml
+  - include:
+      file: db/changelog/changes/13-add-foreign-key-to-shopping-carts.yaml
+  - include:
+      file: db/changelog/changes/14-add-foreign-keys-to-cart-item.yaml

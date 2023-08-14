@@ -1,4 +1,4 @@
 package com.example.bookwonders.dto.book;
 
-public record BookSearchParametersDto(String[] authors) {
+public record BookSearchParametersDto(String[] authors, String[] titles) {
 }
