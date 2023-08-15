@@ -1,10 +1,10 @@
 package com.example.bookwonders.dto.cart;
 
-import java.util.List;
+import java.util.Set;
 import lombok.Data;
 
 @Data
 public class ShoppingCartResponseDto {
     private Long userId;
-    private List<CartItemResponseDto> cartItems;
+    private Set<CartItemResponseDto> cartItems;
 }

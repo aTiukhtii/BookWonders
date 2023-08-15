@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
-public class CartItemRequestDto {
+public class AddCartItemRequestDto {
     @NotBlank
     @Positive
     private Long bookId;

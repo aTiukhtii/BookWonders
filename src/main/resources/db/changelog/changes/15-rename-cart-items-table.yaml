@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: rename-cart-items-table
+      author: atiukhtii
+      changes:
+        - renameTable:
+            oldTableName: cart_item
+            newTableName: cart_items

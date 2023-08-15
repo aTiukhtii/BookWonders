@@ -1,36 +1,37 @@
 package com.example.bookwonders.mapper;
 
 import com.example.bookwonders.config.MapperConfig;
-import com.example.bookwonders.dto.cart.CartItemRequestDto;
+import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.dto.cart.CartItemResponseDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.model.CartItem;
+import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
-import com.example.bookwonders.repository.user.UserRepository;
+import com.example.bookwonders.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @Mapper(config = MapperConfig.class)
+@RequiredArgsConstructor
 public abstract class CartItemMapper {
     @Autowired
     private BookMapper bookMapper;
     @Autowired
-    private ShoppingCartRepository shoppingCartRepository;
+    private UserService userService;
     @Autowired
-    private UserRepository userRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
-    public abstract CartItem toModel(CartItemRequestDto requestDto);
+    public abstract CartItem toModel(AddCartItemRequestDto requestDto);
 
     public abstract CartItemResponseDto toDto(CartItem cartItem);
 
     @AfterMapping
     public void setBookInfoToModel(@MappingTarget CartItem cartItem,
-                                   CartItemRequestDto requestDto) {
+                                   AddCartItemRequestDto requestDto) {
         cartItem.setBook(bookMapper.bookFromId(requestDto.getBookId()));
     }
 
@@ -42,12 +43,10 @@ public abstract class CartItemMapper {
     }
 
     @AfterMapping
-    public void setShoppingCart(@MappingTarget CartItem cartItem,
-                                CartItemRequestDto requestDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() ->
-                new EntityNotFoundException("can't find user by username: "
-                        + authentication.getName()));
-        cartItem.setShoppingCart(shoppingCartRepository.findById(user).orElseThrow());
+    public void setShoppingCartToModel(@MappingTarget CartItem cartItem) {
+        User user = userService.getUser();
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(user.getId()).orElseThrow(() ->
+                new EntityNotFoundException("can't find shopping cart by id: " + user.getId()));
+        cartItem.setShoppingCart(shoppingCart);
     }
 }

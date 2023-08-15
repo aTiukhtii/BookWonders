@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,8 +23,10 @@ import org.hibernate.annotations.Where;
 @Entity
 public class ShoppingCart {
     @Id
-    @JoinColumn(name = "user_id", nullable = false)
-    @OneToOne()
+    private Long id;
+    @MapsId
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -35,9 +38,5 @@ public class ShoppingCart {
     public void addCartItem(CartItem cartItem) {
         cartItems.add(cartItem);
         cartItem.setShoppingCart(this);
-    }
-
-    public void completePurchase(ShoppingCart shoppingCart) {
-        shoppingCart.cartItems.clear();
     }
 }
