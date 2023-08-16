@@ -6,10 +6,13 @@ import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
+import com.example.bookwonders.model.Category;
 import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.book.BookSpecificationBuilder;
 import com.example.bookwonders.repository.category.CategoryRepository;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,11 +28,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponseDto save(CreateBookRequestDto requestDto) {
         Book book = bookMapper.toModel(requestDto);
-        requestDto.getCategoryIds()
-                .stream()
-                .map(categoryRepository::findById)
-                .map(c -> c.orElseThrow(() ->
-                        new EntityNotFoundException("can't find category: " + c)))
+        getCategoriesByIds(requestDto.getCategoryIds())
                 .forEach(category -> category.addBook(book));
         return bookMapper.toDto(bookRepository.save(book));
     }
@@ -72,5 +71,13 @@ public class BookServiceImpl implements BookService {
             throw new EntityNotFoundException("can't delete book by id: " + id);
         }
         bookRepository.deleteById(id);
+    }
+
+    private Set<Category> getCategoriesByIds(List<Long> ids) {
+        return ids.stream()
+                .map(categoryRepository::findById)
+                .map(c -> c.orElseThrow(() ->
+                        new EntityNotFoundException("can't find category: " + c)))
+                .collect(Collectors.toSet());
     }
 }
