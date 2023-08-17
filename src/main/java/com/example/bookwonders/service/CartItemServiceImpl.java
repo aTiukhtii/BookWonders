@@ -1,7 +1,5 @@
 package com.example.bookwonders.service;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.CartItemMapper;
@@ -33,5 +31,10 @@ public class CartItemServiceImpl implements CartItemService {
             throw new EntityNotFoundException("can't delete cart item by id: " + cartItemId);
         }
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    @Override
+    public void deleteAllFromCart() {
+        cartItemRepository.deleteAll();
     }
 }

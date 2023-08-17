@@ -9,6 +9,7 @@ import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartResponseDto getShoppingCart() {
-        return shoppingCartMapper.toDto(getUsersShoppingCart());
+        return shoppingCartMapper.toDto(getShoppingCartModel());
     }
 
     @Override
     public ShoppingCartResponseDto addCartItem(AddCartItemRequestDto requestDto) {
-        ShoppingCart cart = getUsersShoppingCart();
+        ShoppingCart cart = getShoppingCartModel();
         CartItem cartItem = cartItemService.save(requestDto);
         cart.addCartItem(cartItem);
         return getShoppingCart();
@@ -46,9 +47,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return getShoppingCart();
     }
 
-    private ShoppingCart getUsersShoppingCart() {
+    @Override
+    public ShoppingCart getShoppingCartModel() {
         User user = userService.getUser();
         return shoppingCartRepository.findById(user.getId()).orElseThrow(() ->
-                        new EntityNotFoundException("can't find cart by id: " + user.getId()));
+                new EntityNotFoundException("can't find cart by id: " + user.getId()));
+    }
+
+    @Override
+    public void completePurchase(Set<CartItem> cartItems) {
+        cartItemService.deleteAllFromCart();
     }
 }

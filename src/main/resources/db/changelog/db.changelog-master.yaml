@@ -31,3 +31,11 @@ databaseChangeLog:
       file: db/changelog/changes/15-rename-cart-items-table.yaml
   - include:
       file: db/changelog/changes/16-insert-shopping-carts.yaml
+  - include:
+      file: db/changelog/changes/17-create-order-table.yaml
+  - include:
+      file: db/changelog/changes/18-create_order_items_table.yaml
+  - include:
+      file: db/changelog/changes/19-rename-column-in-orders-table.yaml
+  - include:
+      file: db/changelog/changes/20-rename-column-in-orders-table.yaml
