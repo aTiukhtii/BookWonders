@@ -56,8 +56,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ApiResponse(responseCode = "202",
             description = "Order status updated successfully")
-    public void UpdateOrderStatus(@PathVariable Long orderId,
-                                                    UpdateOrderStatusDto updateOrderStatusDto) {
+    public void updateOrderStatus(@PathVariable Long orderId,
+                                  UpdateOrderStatusDto updateOrderStatusDto) {
         orderService.updateOrderStatus(orderId, updateOrderStatusDto);
     }
 

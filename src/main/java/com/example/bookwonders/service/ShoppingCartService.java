@@ -3,9 +3,7 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.dto.cart.ShoppingCartResponseDto;
 import com.example.bookwonders.dto.cart.UpdateBookQuantityInCartDto;
-import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.ShoppingCart;
-import java.util.Set;
 
 public interface ShoppingCartService {
     ShoppingCart save(ShoppingCart shoppingCart);
