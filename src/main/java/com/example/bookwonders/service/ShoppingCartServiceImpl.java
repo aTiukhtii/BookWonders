@@ -9,7 +9,6 @@ import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final UserService userService;
     private final ShoppingCartMapper shoppingCartMapper;
     private final ShoppingCartRepository shoppingCartRepository;
+
+    @Override
+    public ShoppingCart save(ShoppingCart shoppingCart) {
+        return shoppingCartRepository.save(shoppingCart);
+    }
 
     @Override
     public ShoppingCartResponseDto getShoppingCart() {
@@ -55,7 +59,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void completePurchase(Set<CartItem> cartItems) {
-        cartItemService.deleteAllFromCart();
+    public void completePurchase(ShoppingCart shoppingCart) {
+        shoppingCartRepository.delete(shoppingCart);
+        ShoppingCart shoppingCartNew = new ShoppingCart();
+        shoppingCartNew.setUser(shoppingCart.getUser());
+        shoppingCartRepository.save(shoppingCartNew);
     }
 }

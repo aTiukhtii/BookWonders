@@ -3,6 +3,7 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.order.OrderItemResponseDto;
 import com.example.bookwonders.dto.order.OrderResponseDto;
 import com.example.bookwonders.dto.order.PlaceOrderDto;
+import com.example.bookwonders.dto.order.UpdateOrderStatusDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.OrderItemMapper;
 import com.example.bookwonders.mapper.OrderMapper;
@@ -38,8 +39,15 @@ public class OrderServiceImpl implements OrderService {
         Set<OrderItem> orderItems = getOrderItemsFromCart(shoppingCart);
         orderItems.forEach(orderItem -> orderItem.setOrder(savedOrder));
         savedOrder.setOrderItems(getSavedOrderItems(orderItems));
-        shoppingCartService.completePurchase(shoppingCart.getCartItems());
+        shoppingCartService.completePurchase(shoppingCart);
         return orderMapper.toDto(savedOrder);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, UpdateOrderStatusDto updateOrderStatusDto) {
+        Order orderById = getOrderById(orderId);
+        orderById.setStatus(updateOrderStatusDto.status());
+        orderRepository.save(orderById);
     }
 
     @Override

@@ -3,11 +3,14 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.order.OrderItemResponseDto;
 import com.example.bookwonders.dto.order.OrderResponseDto;
 import com.example.bookwonders.dto.order.PlaceOrderDto;
+import com.example.bookwonders.dto.order.UpdateOrderStatusDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
     OrderResponseDto placeOrder(PlaceOrderDto placeOrderDto);
+
+    void updateOrderStatus(Long orderId, UpdateOrderStatusDto updateOrderStatusDto);
 
     List<OrderResponseDto> getOrderHistory(Pageable pageable);
 

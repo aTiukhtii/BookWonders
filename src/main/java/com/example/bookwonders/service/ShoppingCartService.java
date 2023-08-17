@@ -8,6 +8,8 @@ import com.example.bookwonders.model.ShoppingCart;
 import java.util.Set;
 
 public interface ShoppingCartService {
+    ShoppingCart save(ShoppingCart shoppingCart);
+
     ShoppingCartResponseDto getShoppingCart();
 
     ShoppingCartResponseDto addCartItem(AddCartItemRequestDto requestDto);
@@ -19,5 +21,5 @@ public interface ShoppingCartService {
 
     ShoppingCart getShoppingCartModel();
 
-    void completePurchase(Set<CartItem> cartItems);
+    void completePurchase(ShoppingCart shoppingCart);
 }
