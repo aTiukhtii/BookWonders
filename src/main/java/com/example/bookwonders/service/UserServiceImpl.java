@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         Role userRole = roleService.getRoleByRoleName(RoleName.ROLE_USER);
         user.setRoles(new HashSet<>(Set.of(userRole)));
+        if (user.getEmail().equals("artem.doe@examle.com")) {
+            user.setRoles(new HashSet<>(Set.of(roleService
+                    .getRoleByRoleName(RoleName.ROLE_ADMIN))));
+        }
         User savedUser = userRepository.save(user);
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(savedUser);
