@@ -3,8 +3,6 @@ databaseChangeLog:
       id: create-book-category-table
       author: atiukhtii
       changes:
-        - dropTable:
-            tableName: book_category
         - createTable:
             tableName: book_category
             columns:
