@@ -9,6 +9,4 @@ public interface CartItemService {
     CartItem getById(Long id);
 
     void delete(Long cartItemId);
-
-    void deleteAllFromCart();
 }

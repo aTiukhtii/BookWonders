@@ -7,9 +7,12 @@ import com.example.bookwonders.dto.order.UpdateOrderStatusDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.OrderItemMapper;
 import com.example.bookwonders.mapper.OrderMapper;
+import com.example.bookwonders.model.Book;
+import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.Order;
 import com.example.bookwonders.model.OrderItem;
 import com.example.bookwonders.model.ShoppingCart;
+import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.order.OrderRepository;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemService orderItemService;
     private final ShoppingCartService shoppingCartService;
+    private final BookRepository bookRepository;
 
     @Override
     public OrderResponseDto placeOrder(PlaceOrderDto placeOrderDto) {
@@ -73,9 +77,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Set<OrderItem> getOrderItemsFromCart(ShoppingCart shoppingCart) {
+
         return shoppingCart.getCartItems()
                 .stream()
-                .map(orderItemMapper::cartItemToOrderItem)
+                .map(cartItem -> orderItemMapper.cartItemToOrderItem(cartItem,
+                        getBookFromCartItem(cartItem)))
                 .collect(Collectors.toSet());
     }
 
@@ -89,5 +95,11 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(orderItemService::save)
                 .collect(Collectors.toSet());
+    }
+
+    private Book getBookFromCartItem(CartItem cartItem) {
+        return bookRepository.findById(cartItem.getBook().getId()).orElseThrow(() ->
+                new EntityNotFoundException("can't find book by id: "
+                        + cartItem.getBook().getId()));
     }
 }

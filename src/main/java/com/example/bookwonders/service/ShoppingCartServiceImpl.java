@@ -17,13 +17,8 @@ import org.springframework.stereotype.Service;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemService cartItemService;
     private final UserService userService;
-    private final ShoppingCartMapper shoppingCartMapper;
     private final ShoppingCartRepository shoppingCartRepository;
-
-    @Override
-    public ShoppingCart save(ShoppingCart shoppingCart) {
-        return shoppingCartRepository.save(shoppingCart);
-    }
+    private final ShoppingCartMapper shoppingCartMapper;
 
     @Override
     public ShoppingCartResponseDto getShoppingCart() {

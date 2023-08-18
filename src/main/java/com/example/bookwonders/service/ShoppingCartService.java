@@ -6,8 +6,6 @@ import com.example.bookwonders.dto.cart.UpdateBookQuantityInCartDto;
 import com.example.bookwonders.model.ShoppingCart;
 
 public interface ShoppingCartService {
-    ShoppingCart save(ShoppingCart shoppingCart);
-
     ShoppingCartResponseDto getShoppingCart();
 
     ShoppingCartResponseDto addCartItem(AddCartItemRequestDto requestDto);

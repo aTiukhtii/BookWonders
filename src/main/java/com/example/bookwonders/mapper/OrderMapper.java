@@ -6,9 +6,7 @@ import com.example.bookwonders.model.Book;
 import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.Order;
 import com.example.bookwonders.model.ShoppingCart;
-import com.example.bookwonders.model.Status;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -21,17 +19,19 @@ public abstract class OrderMapper {
     @Autowired
     private OrderItemMapper orderItemMapper;
 
-    @Mapping(target = "id", ignore = true)
-    public abstract Order toOrderFromCart(ShoppingCart shoppingCart);
-
     @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "userId", source = "order.user.id")
     public abstract OrderResponseDto toDto(Order order);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "status", expression = "java(com.example.bookwonders.model.Status.PENDING)")
+    @Mapping(target = "orderDate", expression = "java(java.time.LocalDateTime.now())")
+    public abstract Order toOrderFromCart(ShoppingCart shoppingCart);
 
     @AfterMapping
     public void setOrderInfo(@MappingTarget Order order, ShoppingCart shoppingCart) {
         order.setTotal(getTotal(shoppingCart));
-        order.setStatus(Status.PENDING);
-        order.setOrderDate(LocalDateTime.now());
     }
 
     @AfterMapping
@@ -40,11 +40,6 @@ public abstract class OrderMapper {
                 .stream()
                 .map(orderItemMapper::toDto)
                 .collect(Collectors.toSet()));
-    }
-
-    @AfterMapping
-    public void setUserIdToDto(@MappingTarget OrderResponseDto orderResponseDto, Order order) {
-        orderResponseDto.setUserId(order.getUser().getId());
     }
 
     private BigDecimal getTotal(ShoppingCart shoppingCart) {
