@@ -20,11 +20,6 @@ public abstract class ShoppingCartMapper {
     public abstract ShoppingCartResponseDto toDto(ShoppingCart shoppingCart);
 
     @AfterMapping
-    public void setUserToShoppingCart(@MappingTarget ShoppingCart shoppingCart) {
-        shoppingCart.setUser(userService.getUser());
-    }
-
-    @AfterMapping
     public void setBookInfoToCartDto(@MappingTarget ShoppingCartResponseDto responseDto,
                                      ShoppingCart shoppingCart) {
         responseDto.setCartItems(shoppingCart.getCartItems().stream()

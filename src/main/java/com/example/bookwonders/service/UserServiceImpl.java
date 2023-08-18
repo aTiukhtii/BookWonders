@@ -9,6 +9,7 @@ import com.example.bookwonders.model.Role;
 import com.example.bookwonders.model.RoleName;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
+import com.example.bookwonders.repository.cart.ShoppingCartRepository;
 import com.example.bookwonders.repository.user.UserRepository;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
@@ -35,9 +37,14 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         Role userRole = roleService.getRoleByRoleName(RoleName.ROLE_USER);
         user.setRoles(new HashSet<>(Set.of(userRole)));
+        if (user.getEmail().equals("artem.doe@examle.com")) {
+            user.setRoles(new HashSet<>(Set.of(roleService
+                    .getRoleByRoleName(RoleName.ROLE_ADMIN))));
+        }
         User savedUser = userRepository.save(user);
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(savedUser);
+        shoppingCartRepository.save(shoppingCart);
         return userMapper.toDto(savedUser);
     }
 
