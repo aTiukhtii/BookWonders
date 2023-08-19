@@ -13,7 +13,7 @@ services:
   app:
     depends_on:
       - mysqldb
-    image: atiukhtii/job-listing-app
+    image: atiukhtii/book-wonders
     build: .
     env_file: ./.env
     ports:
