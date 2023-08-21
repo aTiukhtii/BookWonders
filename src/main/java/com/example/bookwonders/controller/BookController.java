@@ -3,6 +3,7 @@ package com.example.bookwonders.controller;
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.example.bookwonders.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,7 +66,7 @@ public class BookController {
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto updateBook(@PathVariable Long id,
-                                      @RequestBody @Valid CreateBookRequestDto requestDto) {
+                                      @RequestBody @Valid UpdateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 

@@ -3,6 +3,7 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
@@ -11,6 +12,7 @@ import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.book.BookSpecificationBuilder;
 import com.example.bookwonders.repository.category.CategoryRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookResponseDto save(CreateBookRequestDto requestDto) {
-        Book book = bookMapper.toModel(requestDto);
+        Book book = bookMapper.toModelFromCreateDto(requestDto);
         getCategoriesByIds(requestDto.getCategoryIds())
                 .forEach(category -> category.addBook(book));
         return bookMapper.toDto(bookRepository.save(book));
@@ -48,12 +50,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponseDto update(Long id, CreateBookRequestDto requestDto) {
-        if (!bookRepository.existsById(id)) {
+    public BookResponseDto update(Long id, UpdateBookRequestDto requestDto) {
+        Optional<Book> bookFromDb = bookRepository.findById(id);
+        if (bookFromDb.isEmpty()) {
             throw new EntityNotFoundException("can't update book by id: " + id);
         }
-        Book book = bookMapper.toModel(requestDto);
+        Book book = bookMapper.toModelFromUpdateDto(requestDto);
         book.setId(id);
+        book.setIsbn(bookFromDb.get().getIsbn());
         return bookMapper.toDto(bookRepository.save(book));
     }
 

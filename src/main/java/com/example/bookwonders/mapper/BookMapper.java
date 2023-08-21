@@ -4,6 +4,7 @@ import com.example.bookwonders.config.MapperConfig;
 import com.example.bookwonders.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.example.bookwonders.model.Book;
 import com.example.bookwonders.model.Category;
 import org.mapstruct.AfterMapping;
@@ -12,7 +13,9 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public abstract class BookMapper {
-    public abstract Book toModel(CreateBookRequestDto requestDto);
+    public abstract Book toModelFromCreateDto(CreateBookRequestDto requestDto);
+
+    public abstract Book toModelFromUpdateDto(UpdateBookRequestDto requestDto);
 
     public abstract BookResponseDto toDto(Book book);
 
