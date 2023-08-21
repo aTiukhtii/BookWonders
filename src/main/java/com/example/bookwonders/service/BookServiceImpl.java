@@ -3,7 +3,6 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
-import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
@@ -29,7 +28,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookResponseDto save(CreateBookRequestDto requestDto) {
-        Book book = bookMapper.toModelFromCreateDto(requestDto);
+        Book book = bookMapper.toModel(requestDto);
         getCategoriesByIds(requestDto.getCategoryIds())
                 .forEach(category -> category.addBook(book));
         return bookMapper.toDto(bookRepository.save(book));
@@ -50,20 +49,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookResponseDto update(Long id, UpdateBookRequestDto requestDto) {
-        Optional<Book> bookFromDb = bookRepository.findById(id);
-        if (bookFromDb.isEmpty()) {
+    public BookResponseDto update(Long id, CreateBookRequestDto requestDto) {
+        if (!bookRepository.existsById(id)) {
             throw new EntityNotFoundException("can't update book by id: " + id);
         }
-        Book book = bookMapper.toModelFromUpdateDto(requestDto);
+        Book book = bookMapper.toModel(requestDto);
+        getCategoriesByIds(requestDto.getCategoryIds())
+                .forEach(category -> category.addBook(book));
         book.setId(id);
-        book.setIsbn(bookFromDb.get().getIsbn());
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public List<BookResponseDto> search(BookSearchParametersDto bookSearchParameters) {
-        return bookRepository.findAll(bookSpecificationBuilder.build(bookSearchParameters))
+    public List<BookResponseDto> search(BookSearchParametersDto searchParametersDto,
+                                        Pageable pageable) {
+        return bookRepository.findAll(
+                bookSpecificationBuilder.build(searchParametersDto), pageable)
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
@@ -80,8 +81,7 @@ public class BookServiceImpl implements BookService {
     private Set<Category> getCategoriesByIds(List<Long> ids) {
         return ids.stream()
                 .map(categoryRepository::findById)
-                .map(c -> c.orElseThrow(() ->
-                        new EntityNotFoundException("can't find category: " + c)))
+                .flatMap(Optional::stream)
                 .collect(Collectors.toSet());
     }
 }

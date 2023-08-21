@@ -3,7 +3,6 @@ package com.example.bookwonders.controller;
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
-import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.example.bookwonders.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,14 +65,15 @@ public class BookController {
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = BookResponseDto.class))})
     public BookResponseDto updateBook(@PathVariable Long id,
-                                      @RequestBody @Valid UpdateBookRequestDto requestDto) {
+                                      @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
     @GetMapping("/search")
-    @Operation(summary = "Search books")
-    public List<BookResponseDto> search(BookSearchParametersDto bookSearchParameters) {
-        return bookService.search(bookSearchParameters);
+    @Operation(summary = "Search books with parameters")
+    public List<BookResponseDto> search(@ParameterObject BookSearchParametersDto searchParameters,
+                                        @ParameterObject Pageable pageable) {
+        return bookService.search(searchParameters, pageable);
     }
 
     @DeleteMapping("/{id}")

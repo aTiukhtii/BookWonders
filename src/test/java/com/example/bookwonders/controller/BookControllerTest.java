@@ -3,6 +3,7 @@ package com.example.bookwonders.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -10,24 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
-import com.example.bookwonders.dto.book.UpdateBookRequestDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
-import javax.sql.DataSource;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,39 +35,19 @@ class BookControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired DataSource dataSource,
-            @Autowired WebApplicationContext applicationContext
-    ) throws SQLException {
+    static void beforeAll(@Autowired WebApplicationContext applicationContext) {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
                 .build();
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(connection,
-                    new ClassPathResource("database/books&categories/add-books-and-categories.sql")
-            );
-        }
-    }
-
-    @AfterAll
-    static void afterAll(@Autowired DataSource source) {
-        teardown(source);
-    }
-
-    @SneakyThrows
-    private static void teardown(DataSource source) {
-        try (Connection connection = source.getConnection()) {
-            connection.setAutoCommit(true);
-            ScriptUtils.executeSqlScript(connection,
-                    new ClassPathResource("database/books&categories"
-                            + "/delete-books-and-categories.sql"));
-        }
     }
 
     @Test
     @WithMockUser
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get all books, expected size 2")
     public void getAllBooks_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
@@ -90,6 +63,10 @@ class BookControllerTest {
 
     @Test
     @WithMockUser
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get book by id 1")
     public void getBookById1_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
@@ -114,9 +91,11 @@ class BookControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @DisplayName("Create a kobzar book")
-    @Sql(scripts = "classpath:database/books&categories/delete-book.sql",
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Create a kobzar book")
     public void createBook_Ok() throws Exception {
         CreateBookRequestDto createBookRequestDto = createKobzarBook();
         String request = objectMapper.writeValueAsString(createBookRequestDto);
@@ -135,10 +114,14 @@ class BookControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Update kobzar book with id 1")
     public void updateBook_Ok() throws Exception {
         long bookId = 1;
-        UpdateBookRequestDto updateBookRequestDto = createUpdateRequest();
+        CreateBookRequestDto updateBookRequestDto = createKobzarBook().setIsbn("1234567890");
         updateBookRequestDto.setTitle("Updated book");
         String request = objectMapper.writeValueAsString(updateBookRequestDto);
         MvcResult mvcResult = mockMvc.perform(
@@ -147,12 +130,94 @@ class BookControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-        BookResponseDto expected = createBookResponseDto(createKobzarBook()).setId(bookId).setIsbn("1234567890");
+        BookResponseDto expected = createBookResponseDto(createKobzarBook())
+                .setId(bookId).setIsbn("1234567890");
         expected.setTitle("Updated book");
         BookResponseDto actual = objectMapper.readValue(mvcResult.getResponse()
-                .getContentAsString(), BookResponseDto.class).setCategoryIds(List.of(1L));
+                .getContentAsString(), BookResponseDto.class);
         assertNotNull(actual);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @DisplayName("Update book with wrong id 999, expected not found status")
+    public void updateBook_NotOk() throws Exception {
+        long bookId = 999;
+        CreateBookRequestDto updateBookRequestDto = createKobzarBook().setIsbn("1234567890");
+        updateBookRequestDto.setTitle("Updated book");
+        String request = objectMapper.writeValueAsString(updateBookRequestDto);
+        mockMvc.perform(
+                        put("/books/{id}", bookId)
+                                .content(request)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Search book by author Taras, expected 1 book")
+    public void searchBookByAuthor_Ok() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/books/search")
+                                .param("authors", "Taras")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
+                .getResponse().getContentAsString(), new TypeReference<>() {});
+        assertNotNull(actual);
+        assertEquals(1, actual.size());
+        assertEquals("Taras Shevchenko", actual.get(0).getAuthor());
+    }
+
+    @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Search book by title, expected 1 book")
+    public void searchBookByTitle_Ok() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/books/search")
+                                .param("titles", "i")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
+                .getResponse().getContentAsString(), new TypeReference<>() {});
+        assertNotNull(actual);
+        assertEquals(1, actual.size());
+        assertEquals("It", actual.get(0).getTitle());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Delete book by id 1")
+    public void deleteBookById1_Ok() throws Exception {
+        mockMvc.perform(
+                        delete("/books/{id}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @DisplayName("Delete book by wrong id 999, expected status not found")
+    public void deleteBookByWrongId() throws Exception {
+        mockMvc.perform(
+                        delete("/books/{id}", 999L)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     private static CreateBookRequestDto createKobzarBook() {
@@ -161,16 +226,6 @@ class BookControllerTest {
                 .setCoverImage("kniga_name.jpg")
                 .setAuthor("Taras Shevchenko")
                 .setIsbn("16464565498")
-                .setTitle("New Book")
-                .setPrice(new BigDecimal("19.99"))
-                .setCategoryIds(List.of(1L));
-    }
-
-    private static UpdateBookRequestDto createUpdateRequest() {
-        return new UpdateBookRequestDto()
-                .setDescription("New Book")
-                .setCoverImage("kniga_name.jpg")
-                .setAuthor("Taras Shevchenko")
                 .setTitle("New Book")
                 .setPrice(new BigDecimal("19.99"))
                 .setCategoryIds(List.of(1L));
@@ -187,5 +242,4 @@ class BookControllerTest {
                 .setTitle(dto.getTitle())
                 .setId(3L);
     }
-
 }

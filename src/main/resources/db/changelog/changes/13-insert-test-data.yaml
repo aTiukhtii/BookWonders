@@ -1,140 +1,140 @@
-databaseChangeLog:
-  - changeSet:
-      id: insert-test-user
-      author: your-name
-      changes:
-        - insert:
-            tableName: user_roles
-            columns:
-              - column:
-                  name: user_id
-                  value: 1
-              - column:
-                  name: role_id
-                  value: 1
-        - insert:
-            tableName: user_roles
-            columns:
-              - column:
-                  name: user_id
-                  value: 1
-              - column:
-                  name: role_id
-                  value: 2
-        - insert:
-            tableName: books
-            columns:
-              - column:
-                  name: title
-                  value: Test Book 1
-              - column:
-                  name: author
-                  value: Test Author 1
-              - column:
-                  name: isbn
-                  value: 1234567890
-              - column:
-                  name: price
-                  value: 19.99
-              - column:
-                  name: cover_image
-                  value: test/cover/image
-              - column:
-                  name: description
-                  value: This is a test book.
-        - insert:
-            tableName: books
-            columns:
-              - column:
-                  name: title
-                  value: Test Book 2
-              - column:
-                  name: author
-                  value: Test Author 2
-              - column:
-                  name: isbn
-                  value: 9876543210
-              - column:
-                  name: price
-                  value: 24.99
-              - column:
-                  name: cover_image
-                  value: second/test/cover/image
-              - column:
-                  name: description
-                  value: Another test book.
-        - insert:
-            tableName: categories
-            columns:
-              - column:
-                  name: name
-                  value: Fiction
-              - column:
-                  name: description
-                  value: Fiction books
-        - insert:
-            tableName: categories
-            columns:
-              - column:
-                  name: name
-                  value: Non-Fiction
-              - column:
-                  name: description
-                  value: Non-Fiction books
-        - insert:
-            tableName: book_category
-            columns:
-              - column:
-                  name: book_id
-                  value: 1
-              - column:
-                  name: category_id
-                  value: 1
-        - insert:
-            tableName: book_category
-            columns:
-              - column:
-                  name: book_id
-                  value: 1
-              - column:
-                  name: category_id
-                  value: 2
-        - insert:
-            tableName: book_category
-            columns:
-              - column:
-                  name: book_id
-                  value: 2
-              - column:
-                  name: category_id
-                  value: 1
-        - insert:
-            tableName: shopping_carts
-            columns:
-              - column:
-                  name: user_id
-                  value: 1
-        - insert:
-            tableName: cart_items
-            columns:
-              - column:
-                  name: shopping_cart_id
-                  value: 1
-              - column:
-                  name: book_id
-                  value: 1
-              - column:
-                  name: quantity
-                  value: 2
-        - insert:
-            tableName: cart_items
-            columns:
-              - column:
-                  name: shopping_cart_id
-                  value: 1
-              - column:
-                  name: book_id
-                  value: 2
-              - column:
-                  name: quantity
-                  value: 4
+#databaseChangeLog:
+#  - changeSet:
+#      id: insert-test-user
+#      author: your-name
+#      changes:
+#        - insert:
+#            tableName: user_roles
+#            columns:
+#              - column:
+#                  name: user_id
+#                  value: 1
+#              - column:
+#                  name: role_id
+#                  value: 1
+#        - insert:
+#            tableName: user_roles
+#            columns:
+#              - column:
+#                  name: user_id
+#                  value: 1
+#              - column:
+#                  name: role_id
+#                  value: 2
+#        - insert:
+#            tableName: books
+#            columns:
+#              - column:
+#                  name: title
+#                  value: Test Book 1
+#              - column:
+#                  name: author
+#                  value: Test Author 1
+#              - column:
+#                  name: isbn
+#                  value: 1234567890
+#              - column:
+#                  name: price
+#                  value: 19.99
+#              - column:
+#                  name: cover_image
+#                  value: test/cover/image
+#              - column:
+#                  name: description
+#                  value: This is a test book.
+#        - insert:
+#            tableName: books
+#            columns:
+#              - column:
+#                  name: title
+#                  value: Test Book 2
+#              - column:
+#                  name: author
+#                  value: Test Author 2
+#              - column:
+#                  name: isbn
+#                  value: 9876543210
+#              - column:
+#                  name: price
+#                  value: 24.99
+#              - column:
+#                  name: cover_image
+#                  value: second/test/cover/image
+#              - column:
+#                  name: description
+#                  value: Another test book.
+#        - insert:
+#            tableName: categories
+#            columns:
+#              - column:
+#                  name: name
+#                  value: Fiction
+#              - column:
+#                  name: description
+#                  value: Fiction books
+#        - insert:
+#            tableName: categories
+#            columns:
+#              - column:
+#                  name: name
+#                  value: Non-Fiction
+#              - column:
+#                  name: description
+#                  value: Non-Fiction books
+#        - insert:
+#            tableName: book_category
+#            columns:
+#              - column:
+#                  name: book_id
+#                  value: 1
+#              - column:
+#                  name: category_id
+#                  value: 1
+#        - insert:
+#            tableName: book_category
+#            columns:
+#              - column:
+#                  name: book_id
+#                  value: 1
+#              - column:
+#                  name: category_id
+#                  value: 2
+#        - insert:
+#            tableName: book_category
+#            columns:
+#              - column:
+#                  name: book_id
+#                  value: 2
+#              - column:
+#                  name: category_id
+#                  value: 1
+#        - insert:
+#            tableName: shopping_carts
+#            columns:
+#              - column:
+#                  name: user_id
+#                  value: 1
+#        - insert:
+#            tableName: cart_items
+#            columns:
+#              - column:
+#                  name: shopping_cart_id
+#                  value: 1
+#              - column:
+#                  name: book_id
+#                  value: 1
+#              - column:
+#                  name: quantity
+#                  value: 2
+#        - insert:
+#            tableName: cart_items
+#            columns:
+#              - column:
+#                  name: shopping_cart_id
+#                  value: 1
+#              - column:
+#                  name: book_id
+#                  value: 2
+#              - column:
+#                  name: quantity
+#                  value: 4
