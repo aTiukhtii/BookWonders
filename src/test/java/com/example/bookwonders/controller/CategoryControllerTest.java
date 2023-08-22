@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.bookwonders.dto.book.BookResponseDto;
-import com.example.bookwonders.dto.book.CreateBookRequestDto;
+import com.example.bookwonders.dto.book.BookDtoWithoutCategoryIds;
+import com.example.bookwonders.dto.category.CategoryResponseDto;
+import com.example.bookwonders.dto.category.CreateCategoryDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BookControllerTest {
+class CategoryControllerTest {
     protected static MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
@@ -48,109 +48,123 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Get all books, expected size 2")
-    public void getAllBooks_Ok() throws Exception {
+    @DisplayName("Get all categories, expected size 2")
+    void getAllCategories_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
-                get("/books"))
+                        get("/categories"))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
+        List<CategoryResponseDto> actual = objectMapper.readValue(mvcResult
                 .getResponse().getContentAsString(), new TypeReference<>() {});
         assertNotNull(actual);
         assertEquals(2, actual.size());
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Create category ")
+    void createCategory_Ok() throws Exception {
+        CreateCategoryDto createCategoryDto = new CreateCategoryDto()
+                .setName("Created category")
+                .setDescription("Created category description");
+        String request = objectMapper.writeValueAsString(createCategoryDto);
+        MvcResult mvcResult = mockMvc.perform(
+                        post("/categories")
+                                .content(request)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+        CategoryResponseDto expected = new CategoryResponseDto()
+                .setDescription(createCategoryDto.getDescription())
+                .setName(createCategoryDto.getName())
+                .setId(3L);
+        CategoryResponseDto actual = objectMapper.readValue(mvcResult.getResponse()
+                .getContentAsString(), CategoryResponseDto.class);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Update fiction category with id 1")
+    void updateCategory_Ok() throws Exception {
+        long categoryId = 1;
+        CreateCategoryDto updateBookRequestDto = new CreateCategoryDto()
+                .setName("Updated category")
+                .setDescription("Updated category description");;
+        String request = objectMapper.writeValueAsString(updateBookRequestDto);
+        MvcResult mvcResult = mockMvc.perform(
+                        put("/categories/{id}", categoryId)
+                                .content(request)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+        CategoryResponseDto expected = new CategoryResponseDto()
+                .setId(categoryId)
+                .setName(updateBookRequestDto.getName())
+                .setDescription(updateBookRequestDto.getDescription());
+        CategoryResponseDto actual = objectMapper.readValue(mvcResult.getResponse()
+                .getContentAsString(), CategoryResponseDto.class);
+        assertNotNull(actual);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Update category with wrong id 999, expected status not found")
+    void updateCategory_NotOk() throws Exception {
+        long categoryId = 999;
+        CreateCategoryDto updateBookRequestDto = new CreateCategoryDto()
+                .setName("Updated category")
+                .setDescription("Updated category description");
+        String request = objectMapper.writeValueAsString(updateBookRequestDto);
+        mockMvc.perform(put("/categories/{id}", categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Get book by id 1")
-    public void getBookById1_Ok() throws Exception {
+    @DisplayName("Get category by id 1")
+    void getCategoryById_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
-                        get("/books/{bookId}", 1L)
-                                .contentType(MediaType.APPLICATION_JSON))
+                        get("/categories/{bookId}", 1L))
                 .andExpect(status().isOk())
                 .andReturn();
         long expectedId = 1L;
-        BookResponseDto actual = objectMapper.readValue(mvcResult
-                .getResponse().getContentAsString(), BookResponseDto.class);
+        CategoryResponseDto actual = objectMapper.readValue(mvcResult
+                .getResponse().getContentAsString(), CategoryResponseDto.class);
         assertNotNull(actual);
         assertEquals(expectedId, actual.getId());
     }
 
     @Test
     @WithMockUser
-    @DisplayName("Get book by wrong id 999, expected not found status")
-    public void getBookById999_NotOk() throws Exception {
-        mockMvc.perform(get("/books/{bookId}", 999L))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Create a kobzar book")
-    public void createBook_Ok() throws Exception {
-        CreateBookRequestDto createBookRequestDto = createKobzarBook();
-        String request = objectMapper.writeValueAsString(createBookRequestDto);
-        MvcResult mvcResult = mockMvc.perform(
-                        post("/books")
-                                .content(request)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andReturn();
-        BookResponseDto expected = createBookResponseDto(createBookRequestDto);
-        BookResponseDto actual = objectMapper.readValue(mvcResult.getResponse()
-                .getContentAsString(), BookResponseDto.class);
-        assertNotNull(actual);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Update kobzar book with id 1")
-    public void updateBook_Ok() throws Exception {
-        long bookId = 1;
-        CreateBookRequestDto updateBookRequestDto = createKobzarBook().setIsbn("1234567890");
-        updateBookRequestDto.setTitle("Updated book");
-        String request = objectMapper.writeValueAsString(updateBookRequestDto);
-        MvcResult mvcResult = mockMvc.perform(
-                        put("/books/{id}", bookId)
-                                .content(request)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-        BookResponseDto expected = createBookResponseDto(createKobzarBook())
-                .setId(bookId)
-                .setIsbn("1234567890")
-                .setTitle("Updated book");
-        BookResponseDto actual = objectMapper.readValue(mvcResult.getResponse()
-                .getContentAsString(), BookResponseDto.class);
-        assertNotNull(actual);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @DisplayName("Update book with wrong id 999, expected not found status")
-    public void updateBook_NotOk() throws Exception {
-        long bookId = 999;
-        CreateBookRequestDto updateBookRequestDto = createKobzarBook().setIsbn("1234567890");
-        updateBookRequestDto.setTitle("Updated book");
-        String request = objectMapper.writeValueAsString(updateBookRequestDto);
+    @DisplayName("Get category by wrong id 999, expected status not found")
+    void getCategoryById_NotOk() throws Exception {
         mockMvc.perform(
-                        put("/books/{id}", bookId)
-                                .content(request)
-                                .contentType(MediaType.APPLICATION_JSON))
+                        get("/categories/{bookId}", 999L))
                 .andExpect(status().isNotFound());
     }
 
@@ -160,18 +174,17 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Search book by author Taras, expected 1 book")
-    public void searchBookByAuthor_Ok() throws Exception {
+    @DisplayName("Get books by category id 2, expected size 2")
+    void getBooksByCategoryId_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
-                        get("/books/search")
-                                .param("authors", "Taras"))
+                        get("/categories/{id}/books", 2L))
                 .andExpect(status().isOk())
                 .andReturn();
-        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
+        List<BookDtoWithoutCategoryIds> actual = objectMapper.readValue(mvcResult
                 .getResponse().getContentAsString(), new TypeReference<>() {});
+        long expectedSize = 2;
         assertNotNull(actual);
-        assertEquals(1, actual.size());
-        assertEquals("Taras Shevchenko", actual.get(0).getAuthor());
+        assertEquals(expectedSize, actual.size());
     }
 
     @Test
@@ -180,18 +193,10 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Search book by title, expected 1 book")
-    public void searchBookByTitle_Ok() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(
-                        get("/books/search")
-                                .param("titles", "i"))
-                .andExpect(status().isOk())
-                .andReturn();
-        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
-                .getResponse().getContentAsString(), new TypeReference<>() {});
-        assertNotNull(actual);
-        assertEquals(1, actual.size());
-        assertEquals("It", actual.get(0).getTitle());
+    @DisplayName("Get books by wrong category id 999, expected status not found")
+    void getBooksByCategoryId_NotOk() throws Exception {
+        mockMvc.perform(get("/categories/{id}/books", 999L))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -200,42 +205,21 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    @DisplayName("Delete book by id 1")
-    public void deleteBookById1_Ok() throws Exception {
-        mockMvc.perform(
-                        delete("/books/{id}", 1L))
+    @DisplayName("Delete category with id 1")
+    void deleteCategoryById_Ok() throws Exception {
+        mockMvc.perform(delete("/categories/{id}", 1L))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @DisplayName("Delete book by wrong id 999, expected status not found")
-    public void deleteBookByWrongId() throws Exception {
-        mockMvc.perform(
-                        delete("/books/{id}", 999L))
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Delete category with wrong id 999, expected status not found")
+    void deleteCategoryById_NotOk() throws Exception {
+        mockMvc.perform(delete("/categories/{id}", 999L))
                 .andExpect(status().isNotFound());
-    }
-
-    private static CreateBookRequestDto createKobzarBook() {
-        return new CreateBookRequestDto()
-                .setDescription("New Book")
-                .setCoverImage("kniga_name.jpg")
-                .setAuthor("Taras Shevchenko")
-                .setIsbn("16464565498")
-                .setTitle("New Book")
-                .setPrice(new BigDecimal("19.99"))
-                .setCategoryIds(List.of(1L));
-    }
-
-    private static BookResponseDto createBookResponseDto(CreateBookRequestDto dto) {
-        return new BookResponseDto()
-                .setIsbn(dto.getIsbn())
-                .setCategoryIds(dto.getCategoryIds())
-                .setAuthor(dto.getAuthor())
-                .setDescription(dto.getDescription())
-                .setPrice(dto.getPrice())
-                .setCoverImage(dto.getCoverImage())
-                .setTitle(dto.getTitle())
-                .setId(3L);
     }
 }
