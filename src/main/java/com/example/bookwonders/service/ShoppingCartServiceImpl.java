@@ -19,7 +19,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartMapper shoppingCartMapper;
 
-
     @Override
     public ShoppingCartResponseDto getShoppingCart() {
         return shoppingCartMapper.toDto(getShoppingCartModel());

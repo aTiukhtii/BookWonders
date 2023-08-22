@@ -33,7 +33,8 @@ public class TestSecurityConfig {
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .collect(Collectors.toList());
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
+            Authentication auth =
+                    new UsernamePasswordAuthenticationToken(principal, null, authorities);
             context.setAuthentication(auth);
             SecurityContextHolder.setContext(context);
             return context;

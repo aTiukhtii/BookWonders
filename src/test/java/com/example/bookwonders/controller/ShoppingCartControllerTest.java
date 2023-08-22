@@ -45,6 +45,7 @@ class ShoppingCartControllerTest {
                 .apply(springSecurity())
                 .build();
     }
+
     @Test
     @WithMockUser(username = "test@example.com")
     @Sql(scripts = "classpath:database/cart/add-data-for-cart.sql",
@@ -93,7 +94,6 @@ class ShoppingCartControllerTest {
         assertNotNull(actual);
         assertEquals(expected, actual);
     }
-
 
     @Test
     @WithMockUser(username = "test@example.com")
