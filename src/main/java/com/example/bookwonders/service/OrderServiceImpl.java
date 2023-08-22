@@ -13,6 +13,7 @@ import com.example.bookwonders.model.Order;
 import com.example.bookwonders.model.OrderItem;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.repository.book.BookRepository;
+import com.example.bookwonders.repository.cart.ShoppingCartRepository;
 import com.example.bookwonders.repository.order.OrderRepository;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemService orderItemService;
     private final ShoppingCartService shoppingCartService;
     private final BookRepository bookRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
     public OrderResponseDto placeOrder(PlaceOrderDto placeOrderDto) {
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
         Set<OrderItem> orderItems = getOrderItemsFromCart(shoppingCart);
         orderItems.forEach(orderItem -> orderItem.setOrder(savedOrder));
         savedOrder.setOrderItems(getSavedOrderItems(orderItems));
-        shoppingCartService.completePurchase(shoppingCart);
+        completePurchase(shoppingCart);
         return orderMapper.toDto(savedOrder);
     }
 
@@ -74,6 +76,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderItemResponseDto getOrderItem(Long orderId, Long itemId) {
         return orderItemService.findOrderItemByOrderIdAndId(orderId, itemId);
+    }
+
+    @Override
+    public void completePurchase(ShoppingCart shoppingCart) {
+        shoppingCartRepository.delete(shoppingCart);
+        ShoppingCart shoppingCartNew = new ShoppingCart();
+        shoppingCartNew.setUser(shoppingCart.getUser());
+        shoppingCartRepository.save(shoppingCartNew);
     }
 
     private Set<OrderItem> getOrderItemsFromCart(ShoppingCart shoppingCart) {

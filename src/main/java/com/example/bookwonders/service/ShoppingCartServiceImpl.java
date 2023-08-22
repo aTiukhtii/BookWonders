@@ -3,7 +3,6 @@ package com.example.bookwonders.service;
 import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.dto.cart.ShoppingCartResponseDto;
 import com.example.bookwonders.dto.cart.UpdateBookQuantityInCartDto;
-import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.ShoppingCartMapper;
 import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.ShoppingCart;
@@ -19,6 +18,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final UserService userService;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartMapper shoppingCartMapper;
+
 
     @Override
     public ShoppingCartResponseDto getShoppingCart() {
@@ -49,15 +49,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCart getShoppingCartModel() {
         User user = userService.getUser();
-        return shoppingCartRepository.findById(user.getId()).orElseThrow(() ->
-                new EntityNotFoundException("can't find cart by id: " + user.getId()));
-    }
-
-    @Override
-    public void completePurchase(ShoppingCart shoppingCart) {
-        shoppingCartRepository.delete(shoppingCart);
-        ShoppingCart shoppingCartNew = new ShoppingCart();
-        shoppingCartNew.setUser(shoppingCart.getUser());
-        shoppingCartRepository.save(shoppingCartNew);
+        return shoppingCartRepository.findById(user.getId()).get();
     }
 }
