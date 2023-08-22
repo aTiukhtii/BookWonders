@@ -70,9 +70,10 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    @Operation(summary = "Search books")
-    public List<BookResponseDto> search(BookSearchParametersDto bookSearchParameters) {
-        return bookService.search(bookSearchParameters);
+    @Operation(summary = "Search books with parameters")
+    public List<BookResponseDto> search(@ParameterObject BookSearchParametersDto searchParameters,
+                                        @ParameterObject Pageable pageable) {
+        return bookService.search(searchParameters, pageable);
     }
 
     @DeleteMapping("/{id}")

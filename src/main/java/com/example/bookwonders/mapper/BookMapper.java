@@ -19,7 +19,11 @@ public abstract class BookMapper {
     public abstract BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 
     @AfterMapping
-    public void setCategoryIds(@MappingTarget BookResponseDto bookDto, Book book) {
-        bookDto.setCategoryIds(book.getCategories().stream().map(Category::getId).toList());
+    public void setCategoryIdsToDto(@MappingTarget BookResponseDto bookDto, Book book) {
+        bookDto.setCategoryIds(
+                book.getCategories()
+                        .stream()
+                        .map(Category::getId)
+                        .toList());
     }
 }

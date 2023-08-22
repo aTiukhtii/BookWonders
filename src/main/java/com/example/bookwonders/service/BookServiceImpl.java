@@ -11,6 +11,7 @@ import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.book.BookSpecificationBuilder;
 import com.example.bookwonders.repository.category.CategoryRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +54,17 @@ public class BookServiceImpl implements BookService {
             throw new EntityNotFoundException("can't update book by id: " + id);
         }
         Book book = bookMapper.toModel(requestDto);
+        getCategoriesByIds(requestDto.getCategoryIds())
+                .forEach(category -> category.addBook(book));
         book.setId(id);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public List<BookResponseDto> search(BookSearchParametersDto bookSearchParameters) {
-        return bookRepository.findAll(bookSpecificationBuilder.build(bookSearchParameters))
+    public List<BookResponseDto> search(BookSearchParametersDto searchParametersDto,
+                                        Pageable pageable) {
+        return bookRepository.findAll(
+                bookSpecificationBuilder.build(searchParametersDto), pageable)
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
@@ -76,8 +81,7 @@ public class BookServiceImpl implements BookService {
     private Set<Category> getCategoriesByIds(List<Long> ids) {
         return ids.stream()
                 .map(categoryRepository::findById)
-                .map(c -> c.orElseThrow(() ->
-                        new EntityNotFoundException("can't find category: " + c)))
+                .flatMap(Optional::stream)
                 .collect(Collectors.toSet());
     }
 }

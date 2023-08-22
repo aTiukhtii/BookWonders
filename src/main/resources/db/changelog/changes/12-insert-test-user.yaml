@@ -1,23 +1,23 @@
-databaseChangeLog:
-  - changeSet:
-      id: insert-test-user
-      author: your-name
-      changes:
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: email
-                  value: test@example.com
-              - column:
-                  name: password
-                  value: $2a$10$dI4u349ROIW8hHvw4rKcjeix4YCYhq/qOdf0uDatSjBglv7aimHZS
-              - column:
-                   name: first_name
-                   value: Test
-              - column:
-                    name: last_name
-                    value: User
-              - column:
-                    name: shipping_address
-                    value: Test Address
+#databaseChangeLog:
+#  - changeSet:
+#      id: insert-test-user
+#      author: your-name
+#      changes:
+#        - insert:
+#            tableName: users
+#            columns:
+#              - column:
+#                  name: email
+#                  value: test@example.com
+#              - column:
+#                  name: password
+#                  value: $2a$10$dI4u349ROIW8hHvw4rKcjeix4YCYhq/qOdf0uDatSjBglv7aimHZS
+#              - column:
+#                   name: first_name
+#                   value: Test
+#              - column:
+#                    name: last_name
+#                    value: User
+#              - column:
+#                    name: shipping_address
+#                    value: Test Address
