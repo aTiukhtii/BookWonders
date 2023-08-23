@@ -46,7 +46,7 @@ class CategoryControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get all categories, expected size 2")
     void getAllCategories_Ok() throws Exception {
@@ -64,7 +64,7 @@ class CategoryControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Create category ")
     void createCategory_Ok() throws Exception {
@@ -92,7 +92,7 @@ class CategoryControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Update fiction category with id 1")
     void updateCategory_Ok() throws Exception {
@@ -121,7 +121,7 @@ class CategoryControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Update category with wrong id 999, expected status not found")
     void updateCategory_NotOk() throws Exception {
@@ -140,7 +140,7 @@ class CategoryControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get category by id 1")
     void getCategoryById_Ok() throws Exception {
@@ -159,7 +159,7 @@ class CategoryControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get category by wrong id 999, expected status not found")
     void getCategoryById_NotOk() throws Exception {
@@ -172,7 +172,7 @@ class CategoryControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get books by category id 2, expected size 2")
     void getBooksByCategoryId_Ok() throws Exception {
@@ -191,7 +191,7 @@ class CategoryControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get books by wrong category id 999, expected status not found")
     void getBooksByCategoryId_NotOk() throws Exception {
@@ -203,7 +203,7 @@ class CategoryControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Delete category with id 1")
     void deleteCategoryById_Ok() throws Exception {
@@ -215,7 +215,7 @@ class CategoryControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Delete category with wrong id 999, expected status not found")
     void deleteCategoryById_NotOk() throws Exception {

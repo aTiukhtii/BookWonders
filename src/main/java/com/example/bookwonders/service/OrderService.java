@@ -4,6 +4,7 @@ import com.example.bookwonders.dto.order.OrderItemResponseDto;
 import com.example.bookwonders.dto.order.OrderResponseDto;
 import com.example.bookwonders.dto.order.PlaceOrderDto;
 import com.example.bookwonders.dto.order.UpdateOrderStatusDto;
+import com.example.bookwonders.model.ShoppingCart;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +18,6 @@ public interface OrderService {
     List<OrderItemResponseDto> getOrderItems(Long orderId);
 
     OrderItemResponseDto getOrderItem(Long orderId, Long itemId);
+
+    void completePurchase(ShoppingCart shoppingCart);
 }

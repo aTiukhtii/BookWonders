@@ -21,7 +21,3 @@ databaseChangeLog:
       file: db/changelog/changes/10-create-orders-table.yaml
   - include:
       file: db/changelog/changes/11-create_order_items_table.yaml
-#  - include:
-#      file: db/changelog/changes/12-insert-test-user.yaml
-#  - include:
-#      file: db/changelog/changes/13-insert-test-data.yaml

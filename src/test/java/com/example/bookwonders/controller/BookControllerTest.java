@@ -46,7 +46,7 @@ class BookControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get all books, expected size 2")
     public void getAllBooks_Ok() throws Exception {
@@ -64,7 +64,7 @@ class BookControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Get book by id 1")
     public void getBookById1_Ok() throws Exception {
@@ -92,7 +92,7 @@ class BookControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Create a kobzar book")
     public void createBook_Ok() throws Exception {
@@ -115,7 +115,7 @@ class BookControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Update kobzar book with id 1")
     public void updateBook_Ok() throws Exception {
@@ -158,7 +158,7 @@ class BookControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Search book by author Taras, expected 1 book")
     public void searchBookByAuthor_Ok() throws Exception {
@@ -178,7 +178,7 @@ class BookControllerTest {
     @WithMockUser
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Search book by title, expected 1 book")
     public void searchBookByTitle_Ok() throws Exception {
@@ -198,7 +198,7 @@ class BookControllerTest {
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/books&categories/delete-all.sql",
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Delete book by id 1")
     public void deleteBookById1_Ok() throws Exception {

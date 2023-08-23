@@ -46,7 +46,6 @@ public class CartItemServiceImpl implements CartItemService {
 
     private ShoppingCart getShoppingCartModel() {
         User user = userService.getUser();
-        return shoppingCartRepository.findById(user.getId()).orElseThrow(() ->
-                new EntityNotFoundException("can't find cart by id: " + user.getId()));
+        return shoppingCartRepository.findById(user.getId()).get();
     }
 }
