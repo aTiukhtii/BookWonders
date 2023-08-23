@@ -10,6 +10,7 @@ import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return getShoppingCart();
     }
 
+    @Transactional
     @Override
     public ShoppingCartResponseDto updateQuantityOfBooks(Long cartItemId,
                                                          UpdateBookQuantityInCartDto requestDto) {
