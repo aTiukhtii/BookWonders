@@ -18,7 +18,6 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 @TestConfiguration
 public class TestSecurityConfig {
-
     @Bean
     public WithSecurityContextFactory<WithMockUser> withMockUserSecurityContextFactory() {
         return withMockUser -> {
