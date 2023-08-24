@@ -1,5 +1,5 @@
 INSERT INTO books (id, title, author, isbn, price, cover_image, description)
-VALUES (1 ,'Kobzar', 'Taras Shevchenko', '1234567890', "19.99", 'kniga_kobzar.jpg', 'Kobzar Book');
+VALUES (1 ,'Kobzar', 'Taras Shevchenko', '1234567890', 19.99, 'kniga_kobzar.jpg', 'Kobzar Book');
 
 INSERT INTO books (id, title, author, isbn, price, cover_image, description)
 VALUES (2, 'It', 'Stephen King', '9876543210', 24.99, 'kniga_it.jpg', 'Horror book');
