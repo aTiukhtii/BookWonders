@@ -1,7 +1,6 @@
 package com.example.bookwonders.controller;
 
 import com.example.bookwonders.dto.book.BookResponseDto;
-import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -71,7 +72,7 @@ public class BookController {
 
     @GetMapping("/search")
     @Operation(summary = "Search books with parameters")
-    public List<BookResponseDto> search(@ParameterObject BookSearchParametersDto searchParameters,
+    public List<BookResponseDto> search(@RequestParam Map<String, String> searchParameters,
                                         @ParameterObject Pageable pageable) {
         return bookService.search(searchParameters, pageable);
     }

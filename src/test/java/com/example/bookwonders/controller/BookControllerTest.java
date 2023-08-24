@@ -164,7 +164,7 @@ class BookControllerTest {
     public void searchBookByAuthor_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get("/books/search")
-                                .param("authors", "Taras"))
+                                .param("authorsLike", "Taras"))
                 .andExpect(status().isOk())
                 .andReturn();
         List<BookResponseDto> actual = objectMapper.readValue(mvcResult
@@ -180,11 +180,32 @@ class BookControllerTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @DisplayName("Search book by price from 20 to 25, expected 1 book")
+    public void searchBookByPrice_Ok() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(
+                        get("/books/search")
+                                .param("priceFrom", "20")
+                                .param("priceTo", "25"))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<BookResponseDto> actual = objectMapper.readValue(mvcResult
+                .getResponse().getContentAsString(), new TypeReference<>() {});
+        assertNotNull(actual);
+        assertEquals(1, actual.size());
+        assertEquals(BigDecimal.valueOf(24.99), actual.get(0).getPrice());
+    }
+
+    @Test
+    @WithMockUser
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @DisplayName("Search book by title, expected 1 book")
     public void searchBookByTitle_Ok() throws Exception {
         MvcResult mvcResult = mockMvc.perform(
                         get("/books/search")
-                                .param("titles", "i"))
+                                .param("titlesLike", "i"))
                 .andExpect(status().isOk())
                 .andReturn();
         List<BookResponseDto> actual = objectMapper.readValue(mvcResult
