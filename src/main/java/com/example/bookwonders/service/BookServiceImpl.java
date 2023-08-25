@@ -1,21 +1,22 @@
 package com.example.bookwonders.service;
 
 import com.example.bookwonders.dto.book.BookResponseDto;
-import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.model.Book;
 import com.example.bookwonders.model.Category;
+import com.example.bookwonders.repository.SpecificationManager;
 import com.example.bookwonders.repository.book.BookRepository;
-import com.example.bookwonders.repository.book.BookSpecificationBuilder;
 import com.example.bookwonders.repository.category.CategoryRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final CategoryRepository categoryRepository;
-    private final BookSpecificationBuilder bookSpecificationBuilder;
+    private final SpecificationManager<Book> specificationManager;
 
     @Override
     public BookResponseDto save(CreateBookRequestDto requestDto) {
@@ -61,10 +62,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponseDto> search(BookSearchParametersDto searchParametersDto,
+    public List<BookResponseDto> search(Map<String, String> param,
                                         Pageable pageable) {
-        return bookRepository.findAll(
-                bookSpecificationBuilder.build(searchParametersDto), pageable)
+        Specification<Book> specification = null;
+        for (Map.Entry<String, String> entry : param.entrySet()) {
+            Specification<Book> sp = specificationManager.get(entry.getKey(),
+                    entry.getValue().split(","));
+            specification = specification == null
+                    ? Specification.where(sp)
+                    : specification.and(sp);
+        }
+        return bookRepository.findAll(specification, pageable)
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();

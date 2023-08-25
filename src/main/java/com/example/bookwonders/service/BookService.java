@@ -1,9 +1,9 @@
 package com.example.bookwonders.service;
 
 import com.example.bookwonders.dto.book.BookResponseDto;
-import com.example.bookwonders.dto.book.BookSearchParametersDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Pageable;
 
 public interface BookService {
@@ -15,7 +15,7 @@ public interface BookService {
 
     BookResponseDto update(Long id, CreateBookRequestDto requestDto);
 
-    List<BookResponseDto> search(BookSearchParametersDto bookSearchParameters, Pageable pageable);
+    List<BookResponseDto> search(Map<String, String> param, Pageable pageable);
 
     void delete(Long id);
 }
