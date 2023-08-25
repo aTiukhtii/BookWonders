@@ -1,4 +1,4 @@
-# 📔 BookWonders app
+# 📔 BookWonders
 
 ### 📄 Project description:
 
