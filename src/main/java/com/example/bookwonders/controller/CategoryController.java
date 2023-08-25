@@ -52,6 +52,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update category by ID (Only for admin)")
     @ApiResponse(responseCode = "200",
             description = "Category updated successfully",
