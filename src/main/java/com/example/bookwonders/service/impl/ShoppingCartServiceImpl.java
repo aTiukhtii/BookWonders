@@ -1,4 +1,4 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.dto.cart.ShoppingCartResponseDto;
@@ -8,6 +8,9 @@ import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
+import com.example.bookwonders.service.CartItemService;
+import com.example.bookwonders.service.ShoppingCartService;
+import com.example.bookwonders.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

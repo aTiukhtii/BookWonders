@@ -6,24 +6,29 @@ import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
 import com.example.bookwonders.model.Book;
 import com.example.bookwonders.model.Category;
-import org.mapstruct.AfterMapping;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(config = MapperConfig.class)
-public abstract class BookMapper {
-    public abstract Book toModel(CreateBookRequestDto requestDto);
+public interface BookMapper {
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "categories", ignore = true)
+    Book toModel(CreateBookRequestDto requestDto);
 
-    public abstract BookResponseDto toDto(Book book);
+    @Mapping(target = "categoryIds", source = "categories", qualifiedByName = "mapCategoriesToIds")
+    BookResponseDto toDto(Book book);
 
-    public abstract BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
+    BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 
-    @AfterMapping
-    public void setCategoryIdsToDto(@MappingTarget BookResponseDto bookDto, Book book) {
-        bookDto.setCategoryIds(
-                book.getCategories()
-                        .stream()
-                        .map(Category::getId)
-                        .toList());
+    @Named("mapCategoriesToIds")
+    default List<Long> mapCategoriesToIds(Set<Category> categories) {
+        return categories.stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
     }
 }

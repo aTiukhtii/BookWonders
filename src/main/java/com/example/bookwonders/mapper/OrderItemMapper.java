@@ -9,12 +9,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(config = MapperConfig.class)
-public abstract class OrderItemMapper {
+public interface OrderItemMapper {
     @Mapping(target = "bookId", source = "orderItem.book.id")
-    public abstract OrderItemResponseDto toDto(OrderItem orderItem);
+    OrderItemResponseDto toDto(OrderItem orderItem);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "price", source = "book.price")
     @Mapping(target = "deleted", ignore = true)
-    public abstract OrderItem cartItemToOrderItem(CartItem cartItem, Book book);
+    @Mapping(target = "order", ignore = true)
+    OrderItem cartItemToOrderItem(CartItem cartItem, Book book);
 }

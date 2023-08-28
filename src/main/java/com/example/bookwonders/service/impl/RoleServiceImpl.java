@@ -1,8 +1,9 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.model.Role;
 import com.example.bookwonders.model.RoleName;
 import com.example.bookwonders.repository.user.RoleRepository;
+import com.example.bookwonders.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

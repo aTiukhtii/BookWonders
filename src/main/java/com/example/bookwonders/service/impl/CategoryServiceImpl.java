@@ -1,4 +1,4 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.book.BookDtoWithoutCategoryIds;
 import com.example.bookwonders.dto.category.CategoryResponseDto;
@@ -8,6 +8,7 @@ import com.example.bookwonders.mapper.BookMapper;
 import com.example.bookwonders.mapper.CategoryMapper;
 import com.example.bookwonders.model.Category;
 import com.example.bookwonders.repository.category.CategoryRepository;
+import com.example.bookwonders.service.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

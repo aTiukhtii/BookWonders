@@ -7,39 +7,28 @@ import com.example.bookwonders.model.CartItem;
 import com.example.bookwonders.model.Order;
 import com.example.bookwonders.model.ShoppingCart;
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(config = MapperConfig.class)
-public abstract class OrderMapper {
-    @Autowired
-    private OrderItemMapper orderItemMapper;
+@Mapper(config = MapperConfig.class, uses = OrderItemMapperImpl.class)
+public interface OrderMapper {
 
-    @Mapping(target = "orderItems", ignore = true)
+    @Mapping(target = "orderItems", source = "orderItems")
     @Mapping(target = "userId", source = "order.user.id")
-    public abstract OrderResponseDto toDto(Order order);
+    OrderResponseDto toDto(Order order);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "total", ignore = true)
     @Mapping(target = "status", expression = "java(com.example.bookwonders.model.Status.PENDING)")
     @Mapping(target = "orderDate", expression = "java(java.time.LocalDateTime.now())")
-    public abstract Order toOrderFromCart(ShoppingCart shoppingCart);
+    Order toOrderFromCart(ShoppingCart shoppingCart);
 
     @AfterMapping
-    public void setOrderInfo(@MappingTarget Order order, ShoppingCart shoppingCart) {
+    default void setOrderTotal(@MappingTarget Order order, ShoppingCart shoppingCart) {
         order.setTotal(getTotal(shoppingCart));
-    }
-
-    @AfterMapping
-    public void setOrderItemsToDto(@MappingTarget OrderResponseDto orderResponseDto, Order order) {
-        orderResponseDto.setOrderItems(order.getOrderItems()
-                .stream()
-                .map(orderItemMapper::toDto)
-                .collect(Collectors.toSet()));
     }
 
     private BigDecimal getTotal(ShoppingCart shoppingCart) {

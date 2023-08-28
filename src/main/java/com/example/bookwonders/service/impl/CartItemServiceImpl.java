@@ -1,4 +1,4 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.cart.AddCartItemRequestDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
@@ -10,6 +10,8 @@ import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.cart.CartItemRepository;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
+import com.example.bookwonders.service.CartItemService;
+import com.example.bookwonders.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

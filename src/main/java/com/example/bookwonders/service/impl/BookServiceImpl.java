@@ -1,4 +1,4 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.book.BookResponseDto;
 import com.example.bookwonders.dto.book.CreateBookRequestDto;
@@ -9,6 +9,7 @@ import com.example.bookwonders.model.Category;
 import com.example.bookwonders.repository.SpecificationManager;
 import com.example.bookwonders.repository.book.BookRepository;
 import com.example.bookwonders.repository.category.CategoryRepository;
+import com.example.bookwonders.service.BookService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
