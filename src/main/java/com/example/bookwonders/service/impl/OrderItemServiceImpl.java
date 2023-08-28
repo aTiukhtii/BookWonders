@@ -1,10 +1,11 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.order.OrderItemResponseDto;
 import com.example.bookwonders.exception.EntityNotFoundException;
 import com.example.bookwonders.mapper.OrderItemMapper;
 import com.example.bookwonders.model.OrderItem;
 import com.example.bookwonders.repository.order.OrderItemRepository;
+import com.example.bookwonders.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

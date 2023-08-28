@@ -1,4 +1,4 @@
-package com.example.bookwonders.service;
+package com.example.bookwonders.service.impl;
 
 import com.example.bookwonders.dto.user.UserRegistrationRequestDto;
 import com.example.bookwonders.dto.user.UserResponseDto;
@@ -11,6 +11,8 @@ import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.model.User;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
 import com.example.bookwonders.repository.user.UserRepository;
+import com.example.bookwonders.service.RoleService;
+import com.example.bookwonders.service.UserService;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
