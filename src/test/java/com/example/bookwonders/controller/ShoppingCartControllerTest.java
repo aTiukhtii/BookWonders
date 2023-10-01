@@ -183,7 +183,7 @@ class ShoppingCartControllerTest {
     @DisplayName("Delete book with wrong id 999, expected status not found")
     void deleteCartItemById999_NotOk() throws Exception {
         mockMvc.perform(
-                        delete("/cart/cart-items/{cartItemId}", 99L))
+                        delete("/cart/cart-items/{cartItemId}", 999L))
                 .andExpect(status().isNotFound());
     }
 

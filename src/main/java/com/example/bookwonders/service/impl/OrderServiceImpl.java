@@ -13,18 +13,21 @@ import com.example.bookwonders.model.Order;
 import com.example.bookwonders.model.OrderItem;
 import com.example.bookwonders.model.ShoppingCart;
 import com.example.bookwonders.repository.book.BookRepository;
+import com.example.bookwonders.repository.cart.CartItemRepository;
 import com.example.bookwonders.repository.cart.ShoppingCartRepository;
 import com.example.bookwonders.repository.order.OrderRepository;
 import com.example.bookwonders.service.OrderItemService;
 import com.example.bookwonders.service.OrderService;
 import com.example.bookwonders.service.ShoppingCartService;
 import com.example.bookwonders.service.UserService;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,8 +40,10 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartService shoppingCartService;
     private final BookRepository bookRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Override
+    @Transactional
     public OrderResponseDto placeOrder(PlaceOrderDto placeOrderDto) {
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCartModel();
 
@@ -84,14 +89,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void completePurchase(ShoppingCart shoppingCart) {
-        shoppingCartRepository.delete(shoppingCart);
-        ShoppingCart shoppingCartNew = new ShoppingCart();
-        shoppingCartNew.setUser(shoppingCart.getUser());
-        shoppingCartRepository.save(shoppingCartNew);
+        //        shoppingCartRepository.delete(shoppingCart);
+        //        ShoppingCart shoppingCartNew = new ShoppingCart();
+        //        shoppingCartNew.setUser(shoppingCart.getUser());
+        //        shoppingCartRepository.save(shoppingCartNew);
+
+        shoppingCart.setCartItems(new HashSet<>());
+        cartItemRepository.deleteCartItemByShoppingCartId(shoppingCart.getId());
     }
 
     private Set<OrderItem> getOrderItemsFromCart(ShoppingCart shoppingCart) {
-
         return shoppingCart.getCartItems()
                 .stream()
                 .map(cartItem -> orderItemMapper.cartItemToOrderItem(cartItem,
