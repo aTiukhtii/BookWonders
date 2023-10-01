@@ -62,8 +62,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    @Sql(scripts = {"classpath:database/books&categories/delete-all-book&category.sql",
-            "classpath:database/books&categories/add-books-and-categories.sql"},
+    @Sql(scripts = "classpath:database/books&categories/add-books-and-categories.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = "classpath:database/books&categories/delete-all-book&category.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
