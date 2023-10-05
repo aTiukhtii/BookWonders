@@ -1,3 +1,12 @@
+-- Скидання автоінкрементного лічильника для таблиці books
+ALTER TABLE books AUTO_INCREMENT = 1;
+
+-- Скидання автоінкрементного лічильника для таблиці categories
+ALTER TABLE categories AUTO_INCREMENT = 1;
+
+-- Скидання автоінкрементного лічильника для таблиці book_category
+ALTER TABLE book_category AUTO_INCREMENT = 1;
+
 INSERT INTO books (id, title, author, isbn, price, cover_image, description)
 VALUES (1 ,'Kobzar', 'Taras Shevchenko', '1234567890', 19.99, 'kniga_kobzar.jpg', 'Kobzar Book');
 
