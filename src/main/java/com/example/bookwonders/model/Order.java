@@ -33,6 +33,8 @@ public class Order {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -43,9 +45,10 @@ public class Order {
     private LocalDateTime orderDate;
     @Column(nullable = false)
     private String shippingAddress;
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    //    @ToString.Exclude
+    //    @EqualsAndHashCode.Exclude
     private Set<OrderItem> orderItems;
     @Column(nullable = false)
     private boolean isDeleted = false;

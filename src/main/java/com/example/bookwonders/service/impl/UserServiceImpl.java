@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final ShoppingCartRepository shoppingCartRepository;
 
     @Override
+    @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto) {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new RegistrationException("this email is already in use");
@@ -39,7 +41,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         Role userRole = roleService.getRoleByRoleName(RoleName.ROLE_USER);
         user.setRoles(new HashSet<>(Set.of(userRole)));
-        if (user.getEmail().equals("artem.doe@examle.com")) {
+        if (user.getEmail().equals("artem@gmail.com")) {
             user.setRoles(new HashSet<>(Set.of(roleService
                     .getRoleByRoleName(RoleName.ROLE_ADMIN))));
         }
